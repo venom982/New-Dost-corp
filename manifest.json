@@ -1,0 +1,12 @@
+<escape>{
+"name": "Dost Corporation - Bike Parts Management",
+"short_name": "Dost Corp",
+"description": "Dost Corporation Lahore Bike Parts Stock and Billing Management",
+"start_url": "./index.html",
+"scope": "./",
+"display": "standalone",
+"background_color": "#f1f5f9",
+"theme_color": "#111827",
+"orientation": "portrait",
+"icons": []
+}</escape>
