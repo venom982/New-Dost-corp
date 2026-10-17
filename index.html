@@ -1,209 +1,161 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111827">
-  <title>Dost Corporation | Bike Parts Management</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 16px;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #111827;
-    }
-    header {
-      background: #111827;
-      color: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-    }
-    header h1 { margin: 0 0 10px; }
-    header p { margin: 6px 0; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .card, section {
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px #00000010;
-      margin-bottom: 14px;
-    }
-    .number { font-size: 22px; font-weight: bold; }
-    input, button {
-      width: 100%;
-      padding: 11px;
-      margin: 5px 0;
-      border-radius: 7px;
-      border: 1px solid #cbd5e1;
-      font-size: 15px;
-    }
-    button {
-      background: #166534;
-      color: white;
-      border: 0;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button.delete { background: #b91c1c; }
-    button.return { background: #b45309; }
-    .part-card {
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
-    }
-    .part-card h3 { margin: 0 0 8px; }
-    .part-card p { margin: 5px 0; }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .muted { color: #64748b; font-size: 13px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Dost Corporation | Bike Parts Management</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:Arial,sans-serif;background:#f1f5f9;color:#111827}
+header{background:#111827;color:white;padding:20px;border-radius:12px;margin-bottom:16px}
+header h1{margin:0 0 10px}
+header p{margin:6px 0;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card,section{background:white;padding:15px;border-radius:12px;margin-bottom:14px;box-shadow:0 2px 8px #0001}
+.number{font-size:20px;font-weight:bold;overflow-wrap:anywhere;margin-top:8px}
+input,button{width:100%;padding:12px;margin:5px 0;border:1px solid #cbd5e1;border-radius:7px;font-size:15px}
+button{background:#166534;color:white;border:0;font-weight:bold;cursor:pointer}
+button.delete{background:#b91c1c}
+button.return{background:#b45309}
+button.secondary{background:#334155}
+.part-card{border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-top:10px;overflow-wrap:anywhere}
+.part-card h3{margin:0 0 8px}
+.part-card p{margin:6px 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.muted{color:#64748b;font-size:13px}
+@media(max-width:360px){body{padding:8px}.row{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
 <header>
-  <h1 id="shopTitle">Dost Corporation</h1>
-  <p>Bike Parts Stock Management</p>
-  <p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali,
-  Meclod Road, Lahore</p>
-  <p>0300-7700223 | 0324-4095482</p>
+<h1>Dost Corporation</h1>
+<p>Bike Parts Stock Management</p>
+<p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali, Meclod Road, Lahore</p>
+<p>0300-7700223 | 0324-4095482</p>
 </header>
 
 <div class="grid">
-  <div class="card">
-    <div>Total Parts</div>
-    <div class="number" id="totalParts">0</div>
-  </div>
-  <div class="card">
-    <div>Total Quantity</div>
-    <div class="number" id="totalQty">0</div>
-  </div>
-  <div class="card">
-    <div>Stock Value</div>
-    <div class="number" id="totalValue">Rs. 0</div>
-  </div>
-  <div class="card">
-    <div>Total Sales</div>
-    <div class="number" id="totalSales">Rs. 0</div>
-  </div>
+<div class="card">Total Parts<div class="number" id="totalParts">0</div></div>
+<div class="card">Total Quantity<div class="number" id="totalQty">0</div></div>
+<div class="card">Stock Value<div class="number" id="totalValue">Rs. 0</div></div>
+<div class="card">Net Sales<div class="number" id="totalSales">Rs. 0</div></div>
 </div>
 
 <section>
-  <h2>Add Bike Part</h2>
-  <form id="partForm">
-    <input id="partName" placeholder="Part name" required>
-    <div class="row">
-      <input id="partQty" type="number" min="1"
-        placeholder="Quantity" required>
-      <input id="purchasePrice" type="number" min="0"
-        placeholder="Purchase price" required>
-    </div>
-    <input id="salePrice" type="number" min="0"
-      placeholder="Sale price" required>
-    <button type="submit">Add Part to Stock</button>
-  </form>
+<h2>Add Bike Part</h2>
+<form id="partForm">
+<input id="partName" placeholder="Part name" required>
+<div class="row">
+<input id="partQty" type="number" min="1" step="1" placeholder="Quantity" required>
+<input id="purchasePrice" type="number" min="0" step="0.01" placeholder="Purchase price" required>
+</div>
+<input id="salePrice" type="number" min="0" step="0.01" placeholder="Sale price" required>
+<button type="submit">Add Part to Stock</button>
+</form>
 </section>
 
 <section>
-  <h2>Stock / Parts</h2>
-  <input id="search" placeholder="Search parts..." oninput="renderParts()">
-  <div id="partsList"></div>
+<h2>Stock / Parts</h2>
+<input id="search" placeholder="Search parts..." oninput="renderParts()">
+<div id="partsList"></div>
 </section>
 
 <section>
-  <h2>Create Customer Bill</h2>
-  <form id="billForm">
-    <input id="customerName" placeholder="Customer name" required>
-    <input id="billPart" placeholder="Part name" required>
-    <div class="row">
-      <input id="billQty" type="number" min="1"
-        placeholder="Quantity" required>
-      <input id="paidAmount" type="number" min="0"
-        placeholder="Amount received" value="0" required>
-    </div>
-    <button type="submit">Create Bill</button>
-  </form>
-  <div id="billList"></div>
+<h2>Create Customer Bill</h2>
+<form id="billForm">
+<input id="customerName" placeholder="Customer name" required>
+<input id="billPart" placeholder="Exact part name" required>
+<div class="row">
+<input id="billQty" type="number" min="1" step="1" placeholder="Quantity" required>
+<input id="paidAmount" type="number" min="0" step="0.01" placeholder="Amount received" value="0" required>
+</div>
+<button type="submit">Create Bill</button>
+</form>
+<div id="billList"></div>
 </section>
 
 <section>
-  <h2>Sales & Udhaar</h2>
-  <div id="salesList"></div>
+<h2>Sales & Udhaar</h2>
+<div id="salesList"></div>
 </section>
 
 <section>
-  <h2>Expenses</h2>
-  <form id="expenseForm">
-    <input id="expenseName" placeholder="Expense details" required>
-    <input id="expenseAmount" type="number" min="1"
-      placeholder="Amount in Rs." required>
-    <button type="submit">Add Expense</button>
-  </form>
-  <div id="expenseList"></div>
+<h2>Expenses</h2>
+<form id="expenseForm">
+<input id="expenseName" placeholder="Expense details" required>
+<input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="Amount in Rs." required>
+<button type="submit">Add Expense</button>
+</form>
+<div id="expenseList"></div>
 </section>
 
 <section>
-  <h2>Backup / Restore</h2>
-  <button onclick="downloadBackup()">Download Backup</button>
-  <input id="restoreFile" type="file" accept=".json">
-  <button onclick="restoreBackup()">Restore Backup</button>
-  <p class="muted">Regularly download a backup to keep your records safe.</p>
+<h2>Backup / Restore</h2>
+<button type="button" onclick="downloadBackup()">Download Backup</button>
+<input id="restoreFile" type="file" accept=".json">
+<button type="button" onclick="restoreBackup()">Restore Backup</button>
+<p class="muted">Regularly download a backup to protect your records.</p>
 </section>
 
 <script>
 const $ = id => document.getElementById(id);
-const money = n => "Rs. " + Number(n || 0).toLocaleString("en-PK");
+const money = n => "Rs. " + Number(n || 0).toLocaleString("en-PK", {maximumFractionDigits:2});
 
+const STORAGE_KEY = "dostCorporationData_v1";
 let data;
+
 try {
-  data = JSON.parse(localStorage.getItem("dostCorporationData_v1")) || {};
+  data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 } catch {
   data = {};
 }
+
 data.parts ||= [];
 data.bills ||= [];
 data.expenses ||= [];
 
 function save() {
-  localStorage.setItem("dostCorporationData_v1", JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   renderAll();
 }
 
+function makeId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
 function renderParts() {
-  const search = $("search").value.toLowerCase();
+  const query = $("search").value.trim().toLowerCase();
   const list = $("partsList");
   list.innerHTML = "";
-  data.parts.filter(p => p.name.toLowerCase().includes(search))
+
+  data.parts
+    .filter(p => p.name.toLowerCase().includes(query))
     .forEach(p => {
       const div = document.createElement("div");
       div.className = "part-card";
+
       const title = document.createElement("h3");
       title.textContent = p.name;
+
       const details = document.createElement("p");
       details.textContent =
-        `Qty: ${p.qty} | Purchase: ${money(p.purchase)} | Sale: ${money(p.sale)}`;
+        `Quantity: ${p.qty} | Purchase: ${money(p.purchase)} | Sale: ${money(p.sale)}`;
+
       const value = document.createElement("p");
       value.textContent = "Stock Value: " + money(p.qty * p.purchase);
+
       const del = document.createElement("button");
-      del.textContent = "Delete Part";
       del.className = "delete";
+      del.textContent = "Delete Part";
       del.onclick = () => {
         if (confirm("Delete this part from stock?")) {
           data.parts = data.parts.filter(x => x.id !== p.id);
           save();
         }
       };
+
       div.append(title, details, value, del);
       list.appendChild(div);
     });
@@ -211,138 +163,298 @@ function renderParts() {
 
 $("partForm").addEventListener("submit", e => {
   e.preventDefault();
+
   const name = $("partName").value.trim();
   const qty = Number($("partQty").value);
   const purchase = Number($("purchasePrice").value);
   const sale = Number($("salePrice").value);
-  if (!name || qty < 1 || purchase < 0 || sale < 0) return;
-  const existing = data.parts.find(p => p.name.toLowerCase() === name.toLowerCase());
+
+  if (!name || !Number.isInteger(qty) || qty < 1 ||
+      !Number.isFinite(purchase) || purchase < 0 ||
+      !Number.isFinite(sale) || sale < 0) {
+    alert("Please enter valid part details.");
+    return;
+  }
+
+  const existing = data.parts.find(
+    p => p.name.toLowerCase() === name.toLowerCase()
+  );
+
   if (existing) {
     existing.qty += qty;
     existing.purchase = purchase;
     existing.sale = sale;
   } else {
-    data.parts.push({id: crypto.randomUUID(), name, qty, purchase, sale});
+    data.parts.push({id: makeId(), name, qty, purchase, sale});
   }
+
   e.target.reset();
   save();
 });
 
 $("billForm").addEventListener("submit", e => {
   e.preventDefault();
+
   const customer = $("customerName").value.trim();
   const partName = $("billPart").value.trim();
   const qty = Number($("billQty").value);
   const paid = Number($("paidAmount").value);
-  const part = data.parts.find(p => p.name.toLowerCase() === partName.toLowerCase());
-  if (!part) return alert("Part not found. Check the exact stock part name.");
-  if (qty < 1 || qty > part.qty) return alert("Not enough stock available.");
-  const total = qty * part.sale;
-  if (paid < 0 || paid > total) return alert("Enter a valid received amount.");
+
+  const part = data.parts.find(
+    p => p.name.toLowerCase() === partName.toLowerCase()
+  );
+
+  if (!part) {
+    alert("Part not found. Enter the exact stock part name.");
+    return;
+  }
+
+  if (!Number.isInteger(qty) || qty < 1 || qty > part.qty) {
+    alert("Please enter a valid quantity available in stock.");
+    return;
+  }
+
+  const total = qty * Number(part.sale);
+
+  if (!Number.isFinite(paid) || paid < 0 || paid > total) {
+    alert("Received amount must be between zero and the bill total.");
+    return;
+  }
+
   part.qty -= qty;
+
   data.bills.unshift({
-    id: crypto.randomUUID(), customer, partId: part.id,
-    partName: part.name, qty, unitPrice: part.sale,
-    total, paid, returned: 0, date: new Date().toLocaleString()
+    id: makeId(),
+    customer,
+    partId: part.id,
+    partName: part.name,
+    qty,
+    unitPrice: Number(part.sale),
+    total,
+    paid,
+    returned: 0,
+    date: new Date().toLocaleString()
   });
+
   e.target.reset();
-  $("paidAmount").value = 0;
+  $("paidAmount").value = "0";
   save();
 });
 
+/* Corrected Return Item / Reduce Bill */
 function returnItem(id) {
   const bill = data.bills.find(b => b.id === id);
-  if (!bill) return;
-  const remaining = bill.qty - bill.returned;
-  if (remaining <= 0) return alert("All items on this bill have already been returned.");
-  const input = prompt(`How many ${bill.partName} are being returned? (Maximum ${remaining})`);
+
+  if (!bill) {
+    alert("Bill not found.");
+    return;
+  }
+
+  const originalQty = Number(bill.qty);
+  const returnedQty = Number(bill.returned || 0);
+  const remainingQty = originalQty - returnedQty;
+
+  if (remainingQty <= 0) {
+    alert("All items on this bill have already been returned.");
+    return;
+  }
+
+  const input = prompt(
+    `Part: ${bill.partName}\nRemaining return quantity: ${remainingQty}\nEnter quantity to return:`
+  );
+
   if (input === null) return;
+
   const qty = Number(input);
-  if (!Number.isInteger(qty) || qty < 1 || qty > remaining)
-    return alert("Enter a valid return quantity.");
+
+  if (!Number.isInteger(qty) || qty < 1 || qty > remainingQty) {
+    alert("Enter a whole quantity between 1 and " + remainingQty + ".");
+    return;
+  }
+
   const part = data.parts.find(p => p.id === bill.partId);
-  if (!part) return alert("Original stock item not found. Add it back manually.");
-  const oldTotal = bill.total;
-  const oldPaid = bill.paid;
-  const newTotal = oldTotal - qty * bill.unitPrice;
-  bill.returned += qty;
-  bill.total = newTotal;
-  bill.paid = Math.min(oldPaid, newTotal);
-  part.qty += qty;
+
+  if (!part) {
+    alert("Original stock item not found. No changes were made.");
+    return;
+  }
+
+  const unitPrice = Number(bill.unitPrice);
+  const oldTotal = Number(bill.total);
+
+  if (!Number.isFinite(unitPrice) || unitPrice < 0 ||
+      !Number.isFinite(oldTotal) || oldTotal < 0) {
+    alert("Bill amount is invalid. No changes were made.");
+    return;
+  }
+
+  const reduction = qty * unitPrice;
+
+  if (reduction > oldTotal + 0.001) {
+    alert("Return amount exceeds the remaining bill total.");
+    return;
+  }
+
+  if (!confirm(
+    `Return quantity: ${qty}\n` +
+    `Amount reduced from bill: ${money(reduction)}\n` +
+    `New bill total: ${money(oldTotal - reduction)}\n\n` +
+    `Confirm this return?`
+  )) return;
+
+  /*
+    Calculate new values first, then update the bill and stock.
+    Use the original sale price saved on the bill, not today's stock price.
+  */
+  const newReturnedQty = returnedQty + qty;
+  const newTotal = Math.max(0, oldTotal - reduction);
+  const oldPaid = Number(bill.paid || 0);
+
+  bill.returned = newReturnedQty;
+  bill.total = Math.round(newTotal * 100) / 100;
+
+  // If amount paid exceeds the reduced total, record paid up to that total.
+  // Any refund due should be settled separately with the customer.
+  bill.paid = Math.min(oldPaid, bill.total);
+
+  part.qty = Number(part.qty) + qty;
+
   save();
-  alert("Return recorded. Stock updated and bill total reduced.");
+
+  alert(
+    "Return successful!\n" +
+    "Returned quantity: " + qty + "\n" +
+    "Bill reduced by: " + money(reduction) + "\n" +
+    "Updated bill total: " + money(bill.total) + "\n" +
+    "Stock quantity: " + part.qty
+  );
 }
 
 function renderBills() {
   $("billList").innerHTML = "";
   $("salesList").innerHTML = "";
+
   data.bills.forEach(b => {
     const div = document.createElement("div");
     div.className = "part-card";
+
     const details = document.createElement("p");
     details.textContent =
-      `${b.customer} | ${b.partName} × ${b.qty} | Returned: ${b.returned} | ${b.date}`;
+      `Customer: ${b.customer} | Part: ${b.partName} | Qty: ${b.qty} | Returned: ${b.returned || 0} | ${b.date}`;
+
     const total = document.createElement("p");
-    total.textContent = `Bill: ${money(b.total)} | Paid: ${money(b.paid)} | Due: ${money(b.total - b.paid)}`;
+    total.textContent =
+      `Bill: ${money(b.total)} | Paid: ${money(b.paid)} | Due: ${money(Math.max(0, b.total - b.paid))}`;
+
     const btn = document.createElement("button");
     btn.className = "return";
     btn.textContent = "Return Item / Reduce Bill";
     btn.onclick = () => returnItem(b.id);
-    div.append(details, total, btn);
+
+    const print = document.createElement("button");
+    print.className = "secondary";
+    print.textContent = "Print Bill";
+    print.onclick = () => {
+      const w = window.open("", "_blank");
+      if (!w) {
+        alert("Allow pop-ups to print the bill.");
+        return;
+      }
+      w.document.write(`
+        <!DOCTYPE html><html><head><title>Dost Corporation Bill</title>
+        <style>body{font-family:Arial;padding:20px}h1{margin-bottom:5px}hr{margin:20px 0}</style>
+        </head><body>
+        <h1>Dost Corporation</h1>
+        <p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali, Meclod Road, Lahore</p>
+        <p>0300-7700223 | 0324-4095482</p><hr>
+        <p><b>Bill Date:</b> ${b.date}</p>
+        <p><b>Customer:</b> ${escapeHtml(b.customer)}</p>
+        <p><b>Part:</b> ${escapeHtml(b.partName)}</p>
+        <p><b>Quantity sold:</b> ${b.qty}</p>
+        <p><b>Returned:</b> ${b.returned || 0}</p>
+        <p><b>Net bill total:</b> ${money(b.total)}</p>
+        <p><b>Paid:</b> ${money(b.paid)}</p>
+        <p><b>Due:</b> ${money(Math.max(0, b.total - b.paid))}</p>
+        <hr><p>Thank you for shopping with us!</p>
+        <script>window.onload=()=>window.print();<\/script>
+        </body></html>
+      `);
+      w.document.close();
+    };
+
+    div.append(details, total, btn, print);
     $("billList").appendChild(div);
-    const sales = div.cloneNode(false);
-    sales.append(details.cloneNode(true), total.cloneNode(true));
-    $("salesList").appendChild(sales);
+
+    const saleDiv = document.createElement("div");
+    saleDiv.className = "part-card";
+    const saleDetails = document.createElement("p");
+    saleDetails.textContent = `${b.customer} — ${b.partName} × ${b.qty}`;
+    const saleTotal = document.createElement("p");
+    saleTotal.textContent =
+      `Net: ${money(b.total)} | Paid: ${money(b.paid)} | Due: ${money(Math.max(0, b.total - b.paid))}`;
+    saleDiv.append(saleDetails, saleTotal);
+    $("salesList").appendChild(saleDiv);
   });
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[ch]);
 }
 
 $("expenseForm").addEventListener("submit", e => {
   e.preventDefault();
+
   const name = $("expenseName").value.trim();
   const amount = Number($("expenseAmount").value);
-  if (!name || amount <= 0) return;
-  data.expenses.unshift({name, amount, date: new Date().toLocaleString()});
+
+  if (!name || !Number.isFinite(amount) || amount <= 0) {
+    alert("Enter valid expense details.");
+    return;
+  }
+
+  data.expenses.unshift({
+    id: makeId(),
+    name,
+    amount,
+    date: new Date().toLocaleString()
+  });
+
   e.target.reset();
   save();
 });
 
 function renderExpenses() {
   $("expenseList").innerHTML = "";
-  data.expenses.forEach((ex, i) => {
+
+  data.expenses.forEach(ex => {
     const div = document.createElement("div");
     div.className = "part-card";
-    const text = document.createElement("p");
-    text.textContent = `${ex.name} — ${money(ex.amount)} (${ex.date})`;
+
+    const details = document.createElement("p");
+    details.textContent = `${ex.name} — ${money(ex.amount)} (${ex.date})`;
+
     const del = document.createElement("button");
     del.className = "delete";
     del.textContent = "Delete Expense";
     del.onclick = () => {
       if (confirm("Delete this expense?")) {
-        data.expenses.splice(i, 1);
+        data.expenses = data.expenses.filter(x => x !== ex);
         save();
       }
     };
-    div.append(text, del);
+
+    div.append(details, del);
     $("expenseList").appendChild(div);
   });
 }
 
-function renderAll() {
-  $("totalParts").textContent = data.parts.length;
-  $("totalQty").textContent = data.parts.reduce((s, p) => s + p.qty, 0);
-  $("totalValue").textContent = money(
-    data.parts.reduce((s, p) => s + p.qty * p.purchase, 0)
-  );
-  $("totalSales").textContent = money(
-    data.bills.reduce((s, b) => s + b.total, 0)
-  );
-  renderParts();
-  renderBills();
-  renderExpenses();
-}
-
 function downloadBackup() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json"
+  });
+
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -353,24 +465,54 @@ function downloadBackup() {
 
 function restoreBackup() {
   const file = $("restoreFile").files[0];
-  if (!file) return alert("Please select a backup JSON file.");
+
+  if (!file) {
+    alert("Please select a backup JSON file.");
+    return;
+  }
+
   const reader = new FileReader();
+
   reader.onload = () => {
     try {
       const restored = JSON.parse(reader.result);
+
       if (!Array.isArray(restored.parts) ||
           !Array.isArray(restored.bills) ||
-          !Array.isArray(restored.expenses))
+          !Array.isArray(restored.expenses)) {
         throw new Error("Invalid backup");
-      if (!confirm("Replace current app data with this backup?")) return;
+      }
+
+      if (!confirm("Replace current app records with this backup?")) return;
+
       data = restored;
       save();
-      alert("Backup restored.");
+      alert("Backup restored successfully.");
     } catch {
-      alert("This backup file is not valid.");
+      alert("Invalid backup file.");
     }
   };
+
   reader.readAsText(file);
+}
+
+function renderAll() {
+  $("totalParts").textContent = data.parts.length;
+  $("totalQty").textContent =
+    data.parts.reduce((sum, p) => sum + Number(p.qty || 0), 0);
+
+  $("totalValue").textContent = money(
+    data.parts.reduce((sum, p) =>
+      sum + Number(p.qty || 0) * Number(p.purchase || 0), 0)
+  );
+
+  $("totalSales").textContent = money(
+    data.bills.reduce((sum, b) => sum + Number(b.total || 0), 0)
+  );
+
+  renderParts();
+  renderBills();
+  renderExpenses();
 }
 
 renderAll();
