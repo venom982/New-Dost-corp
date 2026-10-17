@@ -4,517 +4,362 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111827">
-<title>Dost Corporation | Bike Parts Management</title>
+<meta name="theme-color" content="#10251c">
+<title>Dost Corporation - Stock Management</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:14px;font-family:Arial,sans-serif;background:#f1f5f9;color:#111827}
-header{background:#111827;color:white;padding:20px;border-radius:12px;margin-bottom:16px}
-header h1{margin:0 0 10px}
-header p{margin:6px 0;line-height:1.5}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card,section{background:white;padding:15px;border-radius:12px;margin-bottom:14px;box-shadow:0 2px 8px #0001}
-.number{font-size:20px;font-weight:bold;overflow-wrap:anywhere;margin-top:8px}
-input,button{width:100%;padding:12px;margin:5px 0;border:1px solid #cbd5e1;border-radius:7px;font-size:15px}
-button{background:#166534;color:white;border:0;font-weight:bold;cursor:pointer}
-button.delete{background:#b91c1c}
-button.return{background:#b45309}
-button.secondary{background:#334155}
-.part-card{border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-top:10px;overflow-wrap:anywhere}
-.part-card h3{margin:0 0 8px}
-.part-card p{margin:6px 0}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.muted{color:#64748b;font-size:13px}
-@media(max-width:360px){body{padding:8px}.row{grid-template-columns:1fr}}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f5f3;color:#17251d}
+header{background:#10251c;color:white;padding:20px 12px;text-align:center}
+header h1{margin:0 0 8px}
+header p{font-size:13px;margin:5px}
+main{max-width:1000px;margin:auto;padding:12px}
+section{background:white;padding:15px;margin:13px 0;border-radius:12px;box-shadow:0 2px 8px #0001}
+h2{font-size:19px;margin:0 0 12px}
+h3{font-size:15px}
+input,select,button{font:inherit;padding:11px;border-radius:7px}
+input,select{width:100%;border:1px solid #ccd5ce;background:white;margin:5px 0 10px}
+button{border:0;background:#176a46;color:white;cursor:pointer;margin:4px 2px}
+.danger{background:#a83232}
+.secondary{background:#52645a}
+.small{font-size:12px;padding:7px}
+.grid,.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat{padding:13px;background:#edf5ef;border-radius:9px;overflow-wrap:anywhere}
+.stat span{display:block;font-size:12px;color:#52645a;margin-bottom:8px}
+.stat strong{font-size:19px}
+.green{color:#176a46}.red{color:#a83232}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 6px;border-bottom:1px solid #e4e9e5}
+th{background:#f4f7f4}
+.muted{font-size:12px;color:#68776d;line-height:1.5}
+.full{width:100%}
+hr{border:0;border-top:1px solid #e4e9e5;margin:13px 0}
+@media(min-width:650px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{header{background:white;color:black}body{background:white}main>section:not(#bills){display:none!important}button{display:none!important}section{box-shadow:none}#bills{display:block!important}}
 </style>
 </head>
 <body>
 <header>
-<h1>Dost Corporation</h1>
-<p>Bike Parts Stock Management</p>
-<p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali, Meclod Road, Lahore</p>
+<h1>DOST CORPORATION</h1>
+<p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali</p>
+<p>Meclod Road, Lahore</p>
 <p>0300-7700223 | 0324-4095482</p>
 </header>
 
-<div class="grid">
-<div class="card">Total Parts<div class="number" id="totalParts">0</div></div>
-<div class="card">Total Quantity<div class="number" id="totalQty">0</div></div>
-<div class="card">Stock Value<div class="number" id="totalValue">Rs. 0</div></div>
-<div class="card">Net Sales<div class="number" id="totalSales">Rs. 0</div></div>
+<main>
+<section>
+<h2>Daily Dashboard</h2>
+<label for="reportDate">Report Date</label>
+<input id="reportDate" type="date">
+<div class="cards">
+<div class="stat"><span>Today's Sale</span><strong id="sale">Rs. 0</strong></div>
+<div class="stat"><span>Cost of Sold Items</span><strong id="cost">Rs. 0</strong></div>
+<div class="stat"><span>Gross Profit</span><strong id="gross">Rs. 0</strong></div>
+<div class="stat"><span>Shop Expenses</span><strong id="shopExp">Rs. 0</strong></div>
+<div class="stat"><span>Personal Expenses</span><strong id="personalExp">Rs. 0</strong></div>
+<div class="stat"><span>Net After Both Expenses</span><strong id="net">Rs. 0</strong></div>
 </div>
+<p class="muted">Net After Both Expenses = Gross Profit − Shop Expenses − Personal Expenses. Returns are adjusted in the sale and profit figures.</p>
+</section>
 
 <section>
-<h2>Add Bike Part</h2>
-<form id="partForm">
-<input id="partName" placeholder="Part name" required>
-<div class="row">
-<input id="partQty" type="number" min="1" step="1" placeholder="Quantity" required>
-<input id="purchasePrice" type="number" min="0" step="0.01" placeholder="Purchase price" required>
+<h2>Add Stock Item</h2>
+<form id="stockForm">
+<label>Part Name</label>
+<input id="partName" required placeholder="e.g. Brake Shoe">
+<div class="grid">
+<div><label>Quantity</label><input id="partQty" type="number" min="1" step="1" required></div>
+<div><label>Purchase Price (per item)</label><input id="buyPrice" type="number" min="0" step="0.01" required></div>
 </div>
-<input id="salePrice" type="number" min="0" step="0.01" placeholder="Sale price" required>
-<button type="submit">Add Part to Stock</button>
+<label>Sale Price (per item)</label>
+<input id="sellPrice" type="number" min="0" step="0.01" required>
+<button class="full" type="submit">Add Stock</button>
 </form>
 </section>
 
 <section>
-<h2>Stock / Parts</h2>
-<input id="search" placeholder="Search parts..." oninput="renderParts()">
-<div id="partsList"></div>
+<h2>Current Stock</h2>
+<input id="stockSearch" placeholder="Search parts..." oninput="renderStock()">
+<div class="tablewrap">
+<table><thead><tr><th>Part</th><th>Qty</th><th>Buy</th><th>Sale</th><th>Action</th></tr></thead>
+<tbody id="stockRows"></tbody></table>
+</div>
 </section>
 
 <section>
 <h2>Create Customer Bill</h2>
 <form id="billForm">
-<input id="customerName" placeholder="Customer name" required>
-<input id="billPart" placeholder="Exact part name" required>
-<div class="row">
-<input id="billQty" type="number" min="1" step="1" placeholder="Quantity" required>
-<input id="paidAmount" type="number" min="0" step="0.01" placeholder="Amount received" value="0" required>
+<label>Customer Name (optional)</label>
+<input id="customerName" placeholder="Customer name">
+<label>Select Part</label>
+<select id="billPart" required></select>
+<div class="grid">
+<div><label>Quantity</label><input id="billQty" type="number" min="1" step="1" value="1" required></div>
+<div><label>Sale Price per Item</label><input id="billPrice" type="number" min="0" step="0.01" required></div>
 </div>
-<button type="submit">Create Bill</button>
+<p class="muted">Sale price automatically fills from stock. You can change it for this bill only.</p>
+<button class="full" type="submit">Create Bill & Record Sale</button>
 </form>
-<div id="billList"></div>
+</section>
+
+<section id="bills">
+<h2>Customer Bills & Returns</h2>
+<label>Filter Bills by Date</label>
+<input id="billDateFilter" type="date">
+<div id="billRows"></div>
 </section>
 
 <section>
-<h2>Sales & Udhaar</h2>
-<div id="salesList"></div>
-</section>
-
-<section>
-<h2>Expenses</h2>
+<h2>Add Expense</h2>
 <form id="expenseForm">
-<input id="expenseName" placeholder="Expense details" required>
-<input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="Amount in Rs." required>
-<button type="submit">Add Expense</button>
+<label>Expense Category</label>
+<select id="expenseType" required>
+<option value="shop">Shop Expense</option>
+<option value="personal">Personal Expense</option>
+</select>
+<label>Expense Description</label>
+<input id="expenseDesc" required placeholder="e.g. electricity, tea, home expense">
+<div class="grid">
+<div><label>Amount (Rs.)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" required></div>
+<div><label>Date</label><input id="expenseDate" type="date" required></div>
+</div>
+<button class="full" type="submit">Save Expense</button>
 </form>
-<div id="expenseList"></div>
 </section>
 
 <section>
-<h2>Backup / Restore</h2>
-<button type="button" onclick="downloadBackup()">Download Backup</button>
-<input id="restoreFile" type="file" accept=".json">
-<button type="button" onclick="restoreBackup()">Restore Backup</button>
-<p class="muted">Regularly download a backup to protect your records.</p>
+<h2>Expense History</h2>
+<label>Filter Expenses by Date</label>
+<input id="expenseDateFilter" type="date">
+<div class="tablewrap">
+<table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead>
+<tbody id="expenseRows"></tbody></table>
+</div>
 </section>
+
+<section>
+<h2>Backup & Restore</h2>
+<p class="muted">Download a backup regularly. Keep it safe before replacing the code or changing phones.</p>
+<button onclick="downloadBackup()">Download Backup</button>
+<label>Restore a previous backup</label>
+<input id="restoreFile" type="file" accept=".json,application/json">
+<button class="danger" onclick="restoreBackup()">Restore Backup</button>
+</section>
+</main>
 
 <script>
+"use strict";
+const KEY = "dostCorporationData_v1";
 const $ = id => document.getElementById(id);
-const money = n => "Rs. " + Number(n || 0).toLocaleString("en-PK", {maximumFractionDigits:2});
+const money = n => "Rs. " + Number(n || 0).toLocaleString("en-PK",{maximumFractionDigits:2});
+const today = () => {
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+};
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+let data = {parts:[],bills:[],expenses:[]};
 
-const STORAGE_KEY = "dostCorporationData_v1";
-let data;
-
-try {
-  data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-} catch {
-  data = {};
-}
-
-data.parts ||= [];
-data.bills ||= [];
-data.expenses ||= [];
-
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  renderAll();
-}
-
-function makeId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2);
-}
-
-function renderParts() {
-  const query = $("search").value.trim().toLowerCase();
-  const list = $("partsList");
-  list.innerHTML = "";
-
-  data.parts
-    .filter(p => p.name.toLowerCase().includes(query))
-    .forEach(p => {
-      const div = document.createElement("div");
-      div.className = "part-card";
-
-      const title = document.createElement("h3");
-      title.textContent = p.name;
-
-      const details = document.createElement("p");
-      details.textContent =
-        `Quantity: ${p.qty} | Purchase: ${money(p.purchase)} | Sale: ${money(p.sale)}`;
-
-      const value = document.createElement("p");
-      value.textContent = "Stock Value: " + money(p.qty * p.purchase);
-
-      const del = document.createElement("button");
-      del.className = "delete";
-      del.textContent = "Delete Part";
-      del.onclick = () => {
-        if (confirm("Delete this part from stock?")) {
-          data.parts = data.parts.filter(x => x.id !== p.id);
-          save();
-        }
+function loadData(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      data = {
+        parts:Array.isArray(parsed.parts)?parsed.parts:[],
+        bills:Array.isArray(parsed.bills)?parsed.bills:[],
+        expenses:Array.isArray(parsed.expenses)?parsed.expenses:[]
       };
-
-      div.append(title, details, value, del);
-      list.appendChild(div);
-    });
-}
-
-$("partForm").addEventListener("submit", e => {
-  e.preventDefault();
-
-  const name = $("partName").value.trim();
-  const qty = Number($("partQty").value);
-  const purchase = Number($("purchasePrice").value);
-  const sale = Number($("salePrice").value);
-
-  if (!name || !Number.isInteger(qty) || qty < 1 ||
-      !Number.isFinite(purchase) || purchase < 0 ||
-      !Number.isFinite(sale) || sale < 0) {
-    alert("Please enter valid part details.");
-    return;
-  }
-
-  const existing = data.parts.find(
-    p => p.name.toLowerCase() === name.toLowerCase()
-  );
-
-  if (existing) {
-    existing.qty += qty;
-    existing.purchase = purchase;
-    existing.sale = sale;
-  } else {
-    data.parts.push({id: makeId(), name, qty, purchase, sale});
-  }
-
-  e.target.reset();
-  save();
-});
-
-$("billForm").addEventListener("submit", e => {
-  e.preventDefault();
-
-  const customer = $("customerName").value.trim();
-  const partName = $("billPart").value.trim();
-  const qty = Number($("billQty").value);
-  const paid = Number($("paidAmount").value);
-
-  const part = data.parts.find(
-    p => p.name.toLowerCase() === partName.toLowerCase()
-  );
-
-  if (!part) {
-    alert("Part not found. Enter the exact stock part name.");
-    return;
-  }
-
-  if (!Number.isInteger(qty) || qty < 1 || qty > part.qty) {
-    alert("Please enter a valid quantity available in stock.");
-    return;
-  }
-
-  const total = qty * Number(part.sale);
-
-  if (!Number.isFinite(paid) || paid < 0 || paid > total) {
-    alert("Received amount must be between zero and the bill total.");
-    return;
-  }
-
-  part.qty -= qty;
-
-  data.bills.unshift({
-    id: makeId(),
-    customer,
-    partId: part.id,
-    partName: part.name,
-    qty,
-    unitPrice: Number(part.sale),
-    total,
-    paid,
-    returned: 0,
-    date: new Date().toLocaleString()
-  });
-
-  e.target.reset();
-  $("paidAmount").value = "0";
-  save();
-});
-
-/* Corrected Return Item / Reduce Bill */
-function returnItem(id) {
-  const bill = data.bills.find(b => b.id === id);
-
-  if (!bill) {
-    alert("Bill not found.");
-    return;
-  }
-
-  const originalQty = Number(bill.qty);
-  const returnedQty = Number(bill.returned || 0);
-  const remainingQty = originalQty - returnedQty;
-
-  if (remainingQty <= 0) {
-    alert("All items on this bill have already been returned.");
-    return;
-  }
-
-  const input = prompt(
-    `Part: ${bill.partName}\nRemaining return quantity: ${remainingQty}\nEnter quantity to return:`
-  );
-
-  if (input === null) return;
-
-  const qty = Number(input);
-
-  if (!Number.isInteger(qty) || qty < 1 || qty > remainingQty) {
-    alert("Enter a whole quantity between 1 and " + remainingQty + ".");
-    return;
-  }
-
-  const part = data.parts.find(p => p.id === bill.partId);
-
-  if (!part) {
-    alert("Original stock item not found. No changes were made.");
-    return;
-  }
-
-  const unitPrice = Number(bill.unitPrice);
-  const oldTotal = Number(bill.total);
-
-  if (!Number.isFinite(unitPrice) || unitPrice < 0 ||
-      !Number.isFinite(oldTotal) || oldTotal < 0) {
-    alert("Bill amount is invalid. No changes were made.");
-    return;
-  }
-
-  const reduction = qty * unitPrice;
-
-  if (reduction > oldTotal + 0.001) {
-    alert("Return amount exceeds the remaining bill total.");
-    return;
-  }
-
-  if (!confirm(
-    `Return quantity: ${qty}\n` +
-    `Amount reduced from bill: ${money(reduction)}\n` +
-    `New bill total: ${money(oldTotal - reduction)}\n\n` +
-    `Confirm this return?`
-  )) return;
-
-  /*
-    Calculate new values first, then update the bill and stock.
-    Use the original sale price saved on the bill, not today's stock price.
-  */
-  const newReturnedQty = returnedQty + qty;
-  const newTotal = Math.max(0, oldTotal - reduction);
-  const oldPaid = Number(bill.paid || 0);
-
-  bill.returned = newReturnedQty;
-  bill.total = Math.round(newTotal * 100) / 100;
-
-  // If amount paid exceeds the reduced total, record paid up to that total.
-  // Any refund due should be settled separately with the customer.
-  bill.paid = Math.min(oldPaid, bill.total);
-
-  part.qty = Number(part.qty) + qty;
-
-  save();
-
-  alert(
-    "Return successful!\n" +
-    "Returned quantity: " + qty + "\n" +
-    "Bill reduced by: " + money(reduction) + "\n" +
-    "Updated bill total: " + money(bill.total) + "\n" +
-    "Stock quantity: " + part.qty
-  );
-}
-
-function renderBills() {
-  $("billList").innerHTML = "";
-  $("salesList").innerHTML = "";
-
-  data.bills.forEach(b => {
-    const div = document.createElement("div");
-    div.className = "part-card";
-
-    const details = document.createElement("p");
-    details.textContent =
-      `Customer: ${b.customer} | Part: ${b.partName} | Qty: ${b.qty} | Returned: ${b.returned || 0} | ${b.date}`;
-
-    const total = document.createElement("p");
-    total.textContent =
-      `Bill: ${money(b.total)} | Paid: ${money(b.paid)} | Due: ${money(Math.max(0, b.total - b.paid))}`;
-
-    const btn = document.createElement("button");
-    btn.className = "return";
-    btn.textContent = "Return Item / Reduce Bill";
-    btn.onclick = () => returnItem(b.id);
-
-    const print = document.createElement("button");
-    print.className = "secondary";
-    print.textContent = "Print Bill";
-    print.onclick = () => {
-      const w = window.open("", "_blank");
-      if (!w) {
-        alert("Allow pop-ups to print the bill.");
-        return;
-      }
-      w.document.write(`
-        <!DOCTYPE html><html><head><title>Dost Corporation Bill</title>
-        <style>body{font-family:Arial;padding:20px}h1{margin-bottom:5px}hr{margin:20px 0}</style>
-        </head><body>
-        <h1>Dost Corporation</h1>
-        <p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali, Meclod Road, Lahore</p>
-        <p>0300-7700223 | 0324-4095482</p><hr>
-        <p><b>Bill Date:</b> ${b.date}</p>
-        <p><b>Customer:</b> ${escapeHtml(b.customer)}</p>
-        <p><b>Part:</b> ${escapeHtml(b.partName)}</p>
-        <p><b>Quantity sold:</b> ${b.qty}</p>
-        <p><b>Returned:</b> ${b.returned || 0}</p>
-        <p><b>Net bill total:</b> ${money(b.total)}</p>
-        <p><b>Paid:</b> ${money(b.paid)}</p>
-        <p><b>Due:</b> ${money(Math.max(0, b.total - b.paid))}</p>
-        <hr><p>Thank you for shopping with us!</p>
-        <script>window.onload=()=>window.print();<\/script>
-        </body></html>
-      `);
-      w.document.close();
-    };
-
-    div.append(details, total, btn, print);
-    $("billList").appendChild(div);
-
-    const saleDiv = document.createElement("div");
-    saleDiv.className = "part-card";
-    const saleDetails = document.createElement("p");
-    saleDetails.textContent = `${b.customer} — ${b.partName} × ${b.qty}`;
-    const saleTotal = document.createElement("p");
-    saleTotal.textContent =
-      `Net: ${money(b.total)} | Paid: ${money(b.paid)} | Due: ${money(Math.max(0, b.total - b.paid))}`;
-    saleDiv.append(saleDetails, saleTotal);
-    $("salesList").appendChild(saleDiv);
-  });
-}
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, ch => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  })[ch]);
-}
-
-$("expenseForm").addEventListener("submit", e => {
-  e.preventDefault();
-
-  const name = $("expenseName").value.trim();
-  const amount = Number($("expenseAmount").value);
-
-  if (!name || !Number.isFinite(amount) || amount <= 0) {
-    alert("Enter valid expense details.");
-    return;
-  }
-
-  data.expenses.unshift({
-    id: makeId(),
-    name,
-    amount,
-    date: new Date().toLocaleString()
-  });
-
-  e.target.reset();
-  save();
-});
-
-function renderExpenses() {
-  $("expenseList").innerHTML = "";
-
-  data.expenses.forEach(ex => {
-    const div = document.createElement("div");
-    div.className = "part-card";
-
-    const details = document.createElement("p");
-    details.textContent = `${ex.name} — ${money(ex.amount)} (${ex.date})`;
-
-    const del = document.createElement("button");
-    del.className = "delete";
-    del.textContent = "Delete Expense";
-    del.onclick = () => {
-      if (confirm("Delete this expense?")) {
-        data.expenses = data.expenses.filter(x => x !== ex);
-        save();
-      }
-    };
-
-    div.append(details, del);
-    $("expenseList").appendChild(div);
-  });
-}
-
-function downloadBackup() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "dost-corporation-backup.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function restoreBackup() {
-  const file = $("restoreFile").files[0];
-
-  if (!file) {
-    alert("Please select a backup JSON file.");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    try {
-      const restored = JSON.parse(reader.result);
-
-      if (!Array.isArray(restored.parts) ||
-          !Array.isArray(restored.bills) ||
-          !Array.isArray(restored.expenses)) {
-        throw new Error("Invalid backup");
-      }
-
-      if (!confirm("Replace current app records with this backup?")) return;
-
-      data = restored;
-      save();
-      alert("Backup restored successfully.");
-    } catch {
-      alert("Invalid backup file.");
     }
-  };
+  }catch(e){alert("Saved data read nahi ho saka. Backup file ho to restore karein.");}
+}
+function saveData(){
+  try{localStorage.setItem(KEY,JSON.stringify(data));}
+  catch(e){alert("Data save nahi ho saka. Phone storage check karein aur backup download karein.");}
+}
+function esc(s){
+  return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function partById(id){return data.parts.find(p=>p.id===id);}
+function billTotal(b){return Math.max(0,(Number(b.qty)-Number(b.returned||0))*Number(b.unitPrice));}
+function billCost(b){return Math.max(0,(Number(b.qty)-Number(b.returned||0))*Number(b.unitCost));}
+function billProfit(b){return billTotal(b)-billCost(b);}
 
+function renderStock(){
+  const q=$("stockSearch").value.trim().toLowerCase();
+  const rows=data.parts.filter(p=>p.name.toLowerCase().includes(q));
+  $("stockRows").innerHTML=rows.map(p=>`<tr>
+    <td>${esc(p.name)}</td><td>${Number(p.qty)}</td>
+    <td>${money(p.buy)}</td><td>${money(p.sell)}</td>
+    <td><button class="danger small" onclick="deletePart('${p.id}')">Delete</button></td>
+  </tr>`).join("")||'<tr><td colspan="5">Abhi stock item nahi hai.</td></tr>';
+  $("billPart").innerHTML='<option value="">Select part</option>'+data.parts.filter(p=>p.qty>0).map(p=>
+    `<option value="${p.id}">${esc(p.name)} — Stock: ${p.qty}</option>`).join("");
+}
+function deletePart(id){
+  if(data.bills.some(b=>b.partId===id && Number(b.returned||0)<Number(b.qty))){
+    alert("Is part ka active bill hai. Pehle bill ka return record karein.");return;
+  }
+  if(confirm("Ye stock item delete karna hai?")){
+    data.parts=data.parts.filter(p=>p.id!==id);saveData();renderAll();
+  }
+}
+$("stockForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("partName").value.trim();
+  const qty=Number($("partQty").value),buy=Number($("buyPrice").value),sell=Number($("sellPrice").value);
+  if(!name||!Number.isInteger(qty)||qty<1||buy<0||sell<0){alert("Details check karein.");return;}
+  const existing=data.parts.find(p=>p.name.toLowerCase()===name.toLowerCase()&&Number(p.buy)===buy&&Number(p.sell)===sell);
+  if(existing)existing.qty=Number(existing.qty)+qty;
+  else data.parts.push({id:uid(),name,qty,buy,sell});
+  saveData();e.target.reset();renderAll();alert("Stock save ho gaya.");
+});
+
+$("billPart").addEventListener("change",()=>{
+  const p=partById($("billPart").value);
+  if(p)$("billPrice").value=p.sell;
+});
+$("billForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const p=partById($("billPart").value),qty=Number($("billQty").value),price=Number($("billPrice").value);
+  if(!p||!Number.isInteger(qty)||qty<1||qty>Number(p.qty)||price<0){
+    alert("Part, quantity aur price check karein. Stock se zyada quantity nahi bech sakte.");return;
+  }
+  const bill={
+    id:uid(),number:"DC-"+Date.now().toString().slice(-8),
+    date:today(),customer:$("customerName").value.trim(),
+    partId:p.id,partName:p.name,qty,returned:0,
+    unitPrice:price,unitCost:Number(p.buy)
+  };
+  p.qty=Number(p.qty)-qty;
+  data.bills.unshift(bill);
+  saveData();e.target.reset();$("billQty").value=1;
+  $("billDateFilter").value=today();renderAll();
+  alert("Bill ban gaya. Bill list se Print Bill kar sakte hain.");
+});
+
+function returnItem(id){
+  const b=data.bills.find(x=>x.id===id);
+  if(!b)return;
+  const remaining=Number(b.qty)-Number(b.returned||0);
+  if(remaining<=0){alert("Is bill ke tamam items pehle hi return ho chuke hain.");return;}
+  const raw=prompt("Kitni quantity return hui? Remaining: "+remaining);
+  if(raw===null)return;
+  const qty=Number(raw);
+  if(!Number.isInteger(qty)||qty<1||qty>remaining){alert("Valid quantity enter karein.");return;}
+  const p=partById(b.partId);
+  if(!p){alert("Original stock item nahi mil raha. Return record nahi kiya.");return;}
+  const reduction=qty*Number(b.unitPrice);
+  if(!confirm(qty+" item return karein?\nBill "+money(reduction)+" kam hoga aur stock mein "+qty+" add hoga."))return;
+  b.returned=Number(b.returned||0)+qty;
+  p.qty=Number(p.qty)+qty;
+  saveData();renderAll();
+  alert("Return record ho gaya.\nUpdated bill total: "+money(billTotal(b)));
+}
+function printBill(id){
+  const b=data.bills.find(x=>x.id===id);
+  if(!b)return;
+  const w=window.open("","_blank","width=600,height=700");
+  if(!w){alert("Print window block hui hai. Chrome mein pop-ups allow karein.");return;}
+  w.document.write(`<!DOCTYPE html><html><head><title>${esc(b.number)}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>body{font-family:Arial;padding:20px;color:#111}h2,p{text-align:center;margin:6px}hr{margin:18px 0}table{width:100%;border-collapse:collapse;margin-top:20px}td,th{border-bottom:1px solid #ccc;padding:10px;text-align:left}.total{text-align:right;font-weight:bold;margin-top:20px}</style>
+  </head><body><h2>DOST CORPORATION</h2>
+  <p>Al-Gahani Center, Shop #2, Mughal Auto Wali Gali</p>
+  <p>Meclod Road, Lahore</p><p>0300-7700223 | 0324-4095482</p><hr>
+  <p style="text-align:left">Bill: ${esc(b.number)}<br>Date: ${esc(b.date)}<br>Customer: ${esc(b.customer||"Walk-in Customer")}</p>
+  <table><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>
+  <tr><td>${esc(b.partName)}</td><td>${Number(b.qty)-Number(b.returned||0)}</td><td>${money(b.unitPrice)}</td><td>${money(billTotal(b))}</td></tr></table>
+  <p class="total">Total: ${money(billTotal(b))}</p>
+  <p>Thank you for shopping!</p><script>window.onload=()=>window.print();<\/script></body></html>`);
+  w.document.close();
+}
+function renderBills(){
+  const filter=$("billDateFilter").value;
+  const bills=data.bills.filter(b=>!filter||b.date===filter);
+  $("billRows").innerHTML=bills.map(b=>`<section>
+    <strong>Bill ${esc(b.number)}</strong>
+    <p class="muted">Date: ${esc(b.date)} | Customer: ${esc(b.customer||"Walk-in Customer")}</p>
+    <p>${esc(b.partName)} — Original Qty: ${b.qty}, Returned: ${Number(b.returned||0)}</p>
+    <p>Bill Total: <strong>${money(billTotal(b))}</strong></p>
+    <p class="muted">Profit on this bill after returns: ${money(billProfit(b))}</p>
+    <button onclick="printBill('${b.id}')">Print Bill</button>
+    <button class="secondary" onclick="returnItem('${b.id}')">Return Item / Reduce Bill</button>
+  </section>`).join("")||'<p class="muted">Is date ki koi bill nahi.</p>';
+}
+function renderExpenses(){
+  const filter=$("expenseDateFilter").value;
+  const expenses=data.expenses.filter(x=>!filter||x.date===filter);
+  $("expenseRows").innerHTML=expenses.map(x=>`<tr>
+    <td>${esc(x.date)}</td><td>${x.type==="personal"?"Personal":"Shop"}</td>
+    <td>${esc(x.desc)}</td><td>${money(x.amount)}</td>
+    <td><button class="danger small" onclick="deleteExpense('${x.id}')">Delete</button></td>
+  </tr>`).join("")||'<tr><td colspan="5">Koi expense record nahi.</td></tr>';
+}
+$("expenseForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const amount=Number($("expenseAmount").value);
+  if(!(amount>0)){alert("Expense amount sahi enter karein.");return;}
+  data.expenses.unshift({
+    id:uid(),type:$("expenseType").value,
+    desc:$("expenseDesc").value.trim(),
+    amount,date:$("expenseDate").value||today()
+  });
+  saveData();e.target.reset();$("expenseDate").value=today();
+  renderAll();alert("Expense save ho gaya.");
+});
+function deleteExpense(id){
+  if(confirm("Is expense ko delete karna hai?")){
+    data.expenses=data.expenses.filter(x=>x.id!==id);saveData();renderAll();
+  }
+}
+function renderDashboard(){
+  const date=$("reportDate").value||today();
+  const bills=data.bills.filter(b=>b.date===date);
+  const sale=bills.reduce((s,b)=>s+billTotal(b),0);
+  const cost=bills.reduce((s,b)=>s+billCost(b),0);
+  const gross=sale-cost;
+  const expenses=data.expenses.filter(x=>x.date===date);
+  const shop=expenses.filter(x=>x.type==="shop").reduce((s,x)=>s+Number(x.amount),0);
+  const personal=expenses.filter(x=>x.type==="personal").reduce((s,x)=>s+Number(x.amount),0);
+  $("sale").textContent=money(sale);
+  $("cost").textContent=money(cost);
+  $("gross").textContent=money(gross);
+  $("shopExp").textContent=money(shop);
+  $("personalExp").textContent=money(personal);
+  $("net").textContent=money(gross-shop-personal);
+  $("net").className=(gross-shop-personal)<0?"red":"green";
+}
+function renderAll(){renderStock();renderDashboard();renderBills();renderExpenses();}
+$("reportDate").addEventListener("change",renderDashboard);
+$("billDateFilter").addEventListener("change",renderBills);
+$("expenseDateFilter").addEventListener("change",renderExpenses);
+
+function downloadBackup(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="Dost-Corporation-Backup-"+today()+".json";
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function restoreBackup(){
+  const file=$("restoreFile").files[0];
+  if(!file){alert("Pehle backup JSON file select karein.");return;}
+  if(!confirm("Restore karne se current app data replace ho jayega. Pehle current backup bana liya?"))return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const x=JSON.parse(reader.result);
+      if(!x||!Array.isArray(x.parts)||!Array.isArray(x.bills)||!Array.isArray(x.expenses))throw new Error("Invalid backup");
+      data=x;saveData();renderAll();alert("Backup restore ho gaya.");
+    }catch(err){alert("Backup file valid nahi hai.");}
+  };
   reader.readAsText(file);
 }
 
-function renderAll() {
-  $("totalParts").textContent = data.parts.length;
-  $("totalQty").textContent =
-    data.parts.reduce((sum, p) => sum + Number(p.qty || 0), 0);
-
-  $("totalValue").textContent = money(
-    data.parts.reduce((sum, p) =>
-      sum + Number(p.qty || 0) * Number(p.purchase || 0), 0)
-  );
-
-  $("totalSales").textContent = money(
-    data.bills.reduce((sum, b) => sum + Number(b.total || 0), 0)
-  );
-
-  renderParts();
-  renderBills();
-  renderExpenses();
-}
-
+loadData();
+$("reportDate").value=today();
+$("billDateFilter").value=today();
+$("expenseDateFilter").value=today();
 renderAll();
 </script>
 </body>
